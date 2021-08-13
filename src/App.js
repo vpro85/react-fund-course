@@ -1,8 +1,8 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import './styles/App.css'
 import PostList from "./components/PostList";
-import MyButton from "./components/UI/button/MyButton";
-import MyInput from "./components/UI/input/MyInput";
+import PostForm from "./components/PostForm";
+import MySelect from "./components/UI/select/MySelect";
 
 function App() {
 
@@ -12,41 +12,32 @@ function App() {
         {id: 3, title: 'Javascript 3', body: 'Description'},
     ])
 
-    const [post, setPost] = useState({title:'', body:''})
+    const createPost = (newPost) => {
+        setPosts([...posts, newPost]);
+    }
 
-    const [title, setTitle] = useState('');
-    const [body, setBody] = useState('');
-
-    const addNewPost = (e) => {
-        e.preventDefault();
-        const newPost = {
-            id: Date.now(),
-            title,
-            body
-        }
-        setPosts([...posts, {...post, id:Date.now()}]);
-        setPost({title:'', body:''})
+    const removePost = (post) => {
+        setPosts(posts.filter(p => p.id !== post.id));
     }
 
     return (
         <div className="App">
-            <form>
-                <MyInput
-                    value={post.title}
-                    onChange={e => setPost({...post, title: e.target.value})}
-                    type={"text"}
-                    placeholder={"Post name"}
+            <PostForm create={createPost}/>
+            <hr style={{margin: '15px 0'}}/>
+            <div>
+                <MySelect
+                    defaultValue="Sort by"
+                    options={[
+                        {value: "title", name: "by title"},
+                        {value: "body", name: "by description"},
+                    ]}
                 />
-                <MyInput
-                    value={post.body}
-                    onChange={e => setPost({...post, body: e.target.value})}
-                    type="text"
-                    placeholder={"Description"}
-                />
-                <MyButton onClick={addNewPost}>Create Post</MyButton>
-
-            </form>
-            <PostList posts={posts} title={"JS Posts list"}/>
+            </div>
+            {posts.length !== 0 ?
+                <PostList posts={posts} title={"JS Posts list"} remove={removePost}/>
+                :
+                <h1 style={{textAlign: "center"}}>Page is empty</h1>
+            }
         </div>
     );
 }
