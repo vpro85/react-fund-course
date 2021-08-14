@@ -44,7 +44,6 @@ function App() {
                 <PostForm create={createPost}/>
             </MyModal>
 
-            {/*<hr style={{margin: '15px 0'}}/>*/}
             <PostFilter filter={filter} setFilter={setFilter}/>
             <PostList posts={sortedAndSearchedPosts} title={"JS Posts list"} remove={removePost}/>
         </div>
