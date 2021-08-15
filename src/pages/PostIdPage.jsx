@@ -7,23 +7,15 @@ import Loader from "../components/UI/Loader/Loader";
 const PostIdPage = () => {
     const params = useParams();
     const [post, setPost] = useState({})
-    const [isLoading, setIsLoading] = useState(true);
 
-    /*const [fetchPostById, isLoading, error] = useFetching(async (id) => {
+    const [fetchPostById, isLoading, error] = useFetching(async (id) => {
         const response = await PostService.getById(id);
         setPost(response.data);
-    });*/
+    });
 
     useEffect(() => {
         fetchPostById(params.id);
     }, [])
-
-    async function fetchPostById(id) {
-        setIsLoading(true);
-        const response = await PostService.getById(id);
-        setPost(response.data);
-        setIsLoading(false);
-    }
 
     return (
         <div>
