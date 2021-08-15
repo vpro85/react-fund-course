@@ -10,6 +10,7 @@ import PostService from "../API/PostService";
 import Loader from "../components/UI/Loader/Loader";
 import {getPageCount} from "../utils/pages";
 import Pagination from "../components/UI/pagination/Pagination";
+import {useFetching} from "../hooks/useFetching";
 
 function Posts() {
 
@@ -24,7 +25,12 @@ function Posts() {
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
 
-    const [isPostsLoading, setIsPostsLoading] = useState(true);
+    const [fetchPosts, isPostsLoading,error] = useFetching(async()=>{
+        const response = await PostService.getAll(limit, page);
+        setPosts(response.data);
+        setTotalPages(getPageCount(response.headers['x-total-count'], limit));
+    })
+
 
     useEffect(() => {
         fetchPosts()
@@ -33,14 +39,6 @@ function Posts() {
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
         setModal(false)
-    }
-
-    async function fetchPosts() {
-        setIsPostsLoading(true);
-        const response = await PostService.getAll(limit, page);
-        setPosts(response.data);
-        setTotalPages(getPageCount(response.headers['x-total-count'], limit));
-        setIsPostsLoading(false);
     }
 
     const removePost = (post) => {
